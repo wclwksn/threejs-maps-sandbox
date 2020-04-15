@@ -1,101 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html  >
 
 <head>
   <!-- Basic Page Needs -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Three.js Maps Sandbox r1</title>
-
+  <title>Three.js Maps Sandbox </title> 
   <!-- Mobile-Specific Metas -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel='stylesheet' type='text/css'>
-
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel='stylesheet' type='text/css'> 
   <!-- CSS -->
   <link rel="stylesheet" type="text/css" href="css/normalize.css" />
   <link rel="stylesheet" type="text/css" href="css/skeleton.css" />
-  <link rel="stylesheet" type="text/css" href="css/skeleton-tabs.css" />
-
+  <link rel="stylesheet" type="text/css" href="css/skeleton-tabs.css" /> 
   <!-- External Scripts -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
-  <script src="https://cdn.rawgit.com/mrdoob/three.js/dev/build/three.min.js"></script>
-  <script src="https://cdn.rawgit.com/mrdoob/three.js/dev/examples/js/controls/OrbitControls.js"></script>
+
+  <script src="js/three/build/three.min.js"></script>
+  <script src="js/three/examples/js/controls/OrbitControls.js"></script>
 
   <!-- Local Scripts -->
   <script src="js/skeleton-tabs.js"></script>
 </head>
 
 <body>
-  <div class="container">
-
+  <div class="container"> 
     <!-- Page Header -->
     <div class="row">
       <div class=class="u-full-width" align="center" style="padding-top:3rem">
-        <h3>Three.js + Google Maps</h3>
+        <h3>Three.js + Maps Tiles</h3>
       </div>
     </div>
 
     <!-- Scene Viewer -->
     <div class="row">
       <div id="myScene" class="u-full-width"></div>
-    </div>
-
+    </div> 
     <!-- Tab Navigation -->
-    <ul class="tab-nav">
+    <ul class="tab-nav"> 
       <li>
-        <a class="button active" href="#location-controls">Location</a>
-      </li>
-      <li>
-        <a class="button" href="#map-controls">Map</a>
+        <a class="button active" href="#map-controls">Map</a>
       </li>
     </ul>
     <!-- End of Tab Navigation -->
 
     <!-- Tab Content -->
-    <div class="tab-content">
-      <div class="tab-pane" id="location-controls">
-        <div class="row">
-          <div class="six columns">
-            <h6>Address</h6>
-            <input id="inpAddress" value="77 Massachusetts Avenue, Cambridge, MA" style="width:100%" onchange=></input>
-          </div>
-          <div class="three columns">
-            <h6>Longitude</h6>
-            <input id="inpLongitude" value="-71.0931389" onchange="setCenter();" style="width:100%"></input>
-          </div>
-          <div class="three columns">
-            <h6>Latitude</h6>
-            <input id="inpLatitude" value="42.3592444" onchange="setCenter();" style="width:100%"></input>
-          </div>
-        </div>
-      </div>
+    <div class="tab-content"> 
       <div class="tab-pane active" id="map-controls">
         <div class="row">
           <div class="three columns">
             <h6>Display Mode</h6>
             <select id="selMapType" style="width:100%" onchange="changeMapType();">
-              <option>Google Maps</option>
-              <option>Google Maps Terrain</option>
-              <option selected="selected">Google Maps Satellite</option>
-              <option>Google Maps Hybrid</option>
+              <option selected="selected">Google Maps</option> 
             </select>
           </div>
           <div class="three columns">
             <h6>Toggle</h6>
-            <button id="mapbutton" onclick="toggleMap();">Display Map</button>
+            <button id="mapbutton" onclick="toggleMap();">显示地图</button>
           </div>
           <div class="three columns" align="center">
-            <h6>Map Width (m)</h6>
-            <input type="range" id="inpMapWidth" oninput="changeMapWidth(event.target.value);" min="50" max="500" value="250" step="10" style="width:100%">
-            <output type="number" id="outMapWidth" align="center" value="200">250</output>
+             
           </div>
           <div class="three columns" align="center">
-            <h6>Map Length (m)</h6>
-            <input type="range" id="inpMapLength" oninput="changeMapLength(event.target.value);" min="50" max="500" value="250" step="10" style="width:100%">
-            <output type="number" id="outMapLength" align="center" value="200">250</output>
+            
           </div>
         </div>
       </div>
@@ -110,46 +79,42 @@
     // Declare variables for viewer-related scene elements.
     var renderer, sceneContainer;
     var camera, controls;
-    var scene;
-
+    var scene; 
     // Declare variables for physical scene elements and symbols.
-    var boxGeometry, boxMaterial, boxMesh;
-
+    var boxGeometry, boxMaterial, boxMesh; 
     var canvas, tilesLoaded;
     var mapGeometry, mapTexture, mapMesh;
     var lightAmbient;
 
-    var overlay;
-
-    var opacity = 0.85;
+    var overlay; 
+    var opacity = 1.0;
 
     // Declare variables geometry scene control parameters.
     var defaultPlace = "Cambridge, MA";
-    var defaultLongitude = -71.0931389;
-    var defaultLatitude = 42.3592444;
+    var defaultLongitude = 116.4321;
+    var defaultLatitude = 39.9279;
 
     var longitude = defaultLongitude;
     var latitude = defaultLatitude;
 
-    var mapWidth = 100;
-    var mapLength = 100;
+    var mapWidth = 1000;
+    var mapLength = 1000;
     var mapDisplay = false;
-    var mapType = 2;
-    var sizeX = 250;
-    var sizeY = 250;
+    var mapType = 0;
+    var sizeX = 1000;
+    var sizeY = 1000;
 
-    var geocoder, origin_autocomplete;
+    var origin_autocomplete;
     var googleMap, googleMapCenter;
     var tilesLoaded = 0;
 
     // You need to declare a geocoder to be able to input addresses.
-    geocoder = new google.maps.Geocoder();
+    // geocoder = new google.maps.Geocoder();
 
     // Add a location auto-completer for encoding the input address into
     // a latitude and longitude.
-    var origin_autocomplete = new google.maps.places.Autocomplete(document.getElementById("inpAddress"));
-    origin_autocomplete.addListener('place_changed', getNewPlace, false);
-
+    // var origin_autocomplete = new google.maps.places.Autocomplete(document.getElementById("inpAddress"));
+    // origin_autocomplete.addListener('place_changed', getNewPlace, false); 
 
     ///////////////////////////////////////////////////////////////////////////////
     // EVENT HANDLERS + HELPER FUNCTIONS                                         //
@@ -212,16 +177,7 @@
       {
         case "Google Maps":
           mapType = 0;
-          break;
-        case "Google Maps Terrain":
-          mapType = 1;
-          break;
-        case "Google Maps Satellite":
-          mapType = 2;
-          break;
-        case "Google Maps Hybrid":
-          mapType = 3;
-          break;
+          break; 
         default:
           break;
       }
@@ -280,7 +236,7 @@
     function setCenter()
     {
       googleMapCenter = { lat: parseFloat(inpLatitude.value), lng: parseFloat(inpLongitude.value) };
-      geocodeLatLng();
+      // geocodeLatLng();
     }
 
     function geocodeLatLng()
@@ -316,29 +272,24 @@
     // MAP LOGIC HERE                                                            //
     ///////////////////////////////////////////////////////////////////////////////
 
-    const D2R = Math.PI / 180.0;
-    const DAYS_OF_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    const DECLINATION = 23.439281 * Math.PI / 180.0;
-    const EARTH_CIRCUMFERENCE = 2.0 * Math.PI * 6378137.0;
-    const ECCENTRICITY_SQUARED = 0.00669437999014;
-    const EQUATORIAL_RADIUS = 6378137.0;
-    const INVERSE_FLATTENING = 298.257223563;
-    const PI_05 = Math.PI * 0.5;
-    const PI_20 = Math.PI * 2.0;
-    const PI = Math.PI;
-    const POLAR_RADIUS = 6356752.3142;
+    var D2R = Math.PI / 180.0;
+    var DAYS_OF_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var DECLINATION = 23.439281 * Math.PI / 180.0;
+    var EARTH_CIRCUMFERENCE = 2.0 * Math.PI * 6378137.0;
+    var ECCENTRICITY_SQUARED = 0.00669437999014;
+    var EQUATORIAL_RADIUS = 6378137.0;
+    var INVERSE_FLATTENING = 298.257223563;
+    var PI_05 = Math.PI * 0.5;
+    var PI_20 = Math.PI * 2.0;
+    var PI = Math.PI;
+    var POLAR_RADIUS = 6356752.3142;
 
     // GOOGLE MAP CONSTANTS ///////////////////////////////////////////////////////
 
-    const GOOGLE_MAP_TYPES = [
-      ['Google Maps', 'https://mt.google.com/vt/x='],
-      ['Google Maps Terrain', 'https://mt.google.com/vt/lyrs=t&x='],
-      ['Google Maps Satellite', 'https://mt.google.com/vt/lyrs=s&x='],
-      ['Google Maps Hybrid', 'https://mt.google.com/vt/lyrs=y&x='],
-    ];
-
-    const PX_PER_TILE = 256;
-
+    var GOOGLE_MAP_TYPES = [
+      ['Google Maps', 'http://map.geoq.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer/tile/']
+    ]; 
+    var PX_PER_TILE = 256; 
     // MAP OVERLAY GLOBAL VARIABLES ///////////////////////////////////////////////
 
     var tilesLoaded = 0;
@@ -393,15 +344,15 @@
         }
       }
 
-      let tilesPerSideX = Math.ceil(mapTileLengthsX);                  // Makes sense...
-      let tilesPerSideY = Math.ceil(mapTileLengthsY);                  // Makes sense...
+      let tilesPerSideX = Math.ceil(mapTileLengthsX); // Makes sense...
+      let tilesPerSideY = Math.ceil(mapTileLengthsY); // Makes sense...
       let totalNumOfTiles = (tilesPerSideX + 1) * (tilesPerSideY + 1); // Makes sense...
 
       let tileForOriginX = Math.floor(lon2tile(overlay.longitude, overlay.zoom)); // Makes sense...
-      let tileForOriginY = Math.floor(lat2tile(overlay.latitude, overlay.zoom));  // Makes sense...
+      let tileForOriginY = Math.floor(lat2tile(overlay.latitude, overlay.zoom)); // Makes sense...
 
       let fracTileOffsetX = lon2tile(overlay.longitude, overlay.zoom) - tileForOriginX; // Makes sense...
-      let fracTileOffsetY = lat2tile(overlay.latitude, overlay.zoom) - tileForOriginY;  // Makes sense...
+      let fracTileOffsetY = lat2tile(overlay.latitude, overlay.zoom) - tileForOriginY; // Makes sense...
 
       let startTileX = tileForOriginX - Math.round(Math.ceil(0.5 * tilesPerSideX) - fracTileOffsetX);
       let startTileY = tileForOriginY - Math.round(Math.ceil(0.5 * tilesPerSideY) - fracTileOffsetY);
@@ -410,10 +361,11 @@
       let canvasPxStartY = ((0.5 * mapTileLengthsY) - (tileForOriginY - startTileY) - (fracTileOffsetY)) * PX_PER_TILE;
 
       canvas = document.createElement('canvas');
-      canvas.width  = mapTileLengthsX * PX_PER_TILE;
+      canvas.width = mapTileLengthsX * PX_PER_TILE;
       canvas.height = mapTileLengthsY * PX_PER_TILE;
 
-      console.log({
+      console.log(
+      {
         "Zoom Level": overlay.zoom,
         "Map Size X (m)": mapSizeX,
         "Map Size Y (m)": mapSizeY,
@@ -448,7 +400,7 @@
       {
         for (let y = 0; y < tilesPerSideY + 1; y++)
         {
-          urls.push(baseURL + (startTileX + x) + '&y=' + (startTileY + y) + '&z=' + overlay.zoom);
+          urls.push(baseURL + overlay.zoom + '/' + (startTileY + y) + '/' + (startTileX + x));
           xPositions.push(canvasPxStartX + (x * PX_PER_TILE));
           yPositions.push(canvasPxStartY + (y * PX_PER_TILE));
         }
@@ -486,7 +438,7 @@
           256, 256, // source width, source height (sWidth, sHeight)
           canvasX, canvasY, // destination x, destination y (dx, dy)
           metersPerTile / metersPerTilePx, // destination width (dWidth)
-          metersPerTile / metersPerTilePx  // destination height (dHeight)
+          metersPerTile / metersPerTilePx // destination height (dHeight)
         );
 
         if (++tilesLoaded == totalNumOfTiles)
