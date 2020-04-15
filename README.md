@@ -10,8 +10,8 @@ A sandbox for experimenting with loading Google Map tiles into a Three.js scene.
 threejs的类库，从官网下载一个包，放在工程里即可。（js/three）
 
 ### 效果图
-[效果图](https://github.com/wclwksn/threejs-maps-sandbox/blob/master/image/%E6%95%88%E6%9E%9C%E5%9B%BE.png)
+![效果图](https://github.com/wclwksn/threejs-maps-sandbox/blob/master/image/%E6%95%88%E6%9E%9C%E5%9B%BE.png)
 
 
 #### 讨论交流
-[公众号](https://github.com/wclwksn/threejs-maps-sandbox/blob/master/image/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg)
+![公众号](https://github.com/wclwksn/threejs-maps-sandbox/blob/master/image/%E5%85%AC%E4%BC%97%E5%8F%B7.jpg)
